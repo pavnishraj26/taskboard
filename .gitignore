@@ -1,0 +1,20 @@
+# Dependencies and local environments
+node_modules/
+.venv/
+__pycache__/
+.pytest_cache/
+*.pyc
+
+# Secrets and machine-local config
+.env
+.env.*
+!.env.example
+*.local
+.cursor/mcp.json
+.cursor/settings.json
+
+# Build output
+dist/
+bin/
+obj/
+target/

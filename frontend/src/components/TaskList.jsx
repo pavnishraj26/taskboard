@@ -1,0 +1,50 @@
+import { STATUSES, STATUS_LABELS } from '../constants'
+import TaskCard from './TaskCard'
+
+// Renders the three Kanban columns. When a status filter is active, only the
+// matching column is shown.
+export default function TaskList({
+  tasks,
+  filter,
+  onAdvance,
+  onDelete,
+  commentsByTask,
+  expandedTaskId,
+  onToggleComments,
+  onPostComment,
+  onDeleteComment,
+  commentError,
+}) {
+  const columns = filter === 'all' ? STATUSES : [filter]
+
+  return (
+    <div className="board">
+      {columns.map((status) => {
+        const columnTasks = tasks.filter((t) => t.status === status)
+        return (
+          <section className={`column column-${status}`} key={status} aria-label={STATUS_LABELS[status]}>
+            <h2>
+              <span className="column-label">{STATUS_LABELS[status]}</span>
+              <span className="column-count">{columnTasks.length}</span>
+            </h2>
+            {columnTasks.length === 0 && <p className="empty-column">No tasks yet</p>}
+            {columnTasks.map((task) => (
+              <TaskCard
+                key={task.id}
+                task={task}
+                onAdvance={onAdvance}
+                onDelete={onDelete}
+                comments={commentsByTask?.[task.id] ?? []}
+                commentsOpen={expandedTaskId === task.id}
+                onToggleComments={onToggleComments}
+                onPostComment={onPostComment}
+                onDeleteComment={onDeleteComment}
+                commentError={expandedTaskId === task.id ? commentError : null}
+              />
+            ))}
+          </section>
+        )
+      })}
+    </div>
+  )
+}
