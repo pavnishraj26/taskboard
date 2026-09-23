@@ -1,6 +1,6 @@
 ---
 name: speckit-verify
-description: Verifies a SpecKit feature against acceptance scenarios and AGENTS.md quality gates. Use after speckit-implement.
+description: Verifies a SpecKit feature against acceptance scenarios and .cursor/rules quality gates. Use after speckit-implement.
 model: inherit
 readonly: true
 ---
@@ -30,4 +30,4 @@ You verify that a SpecKit feature is complete and correct.
 ## Rules
 
 - Read-only regarding product code: do not implement fixes here; list concrete fix tasks for `speckit-implement`.
-- Be strict on layering, schema ownership, and 404/422 contract.
+- Be strict on `.cursor/rules/engineering-rules.mdc`: layering, schema ownership, and the 404/422 contract.

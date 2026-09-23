@@ -1,0 +1,16 @@
+---
+description: Jira + SpecKit automated feature workflow — use master agent and sequential sub-agents
+alwaysApply: false
+---
+
+# Jira → SpecKit feature automation
+
+When the user asks to implement a **Jira user story** with SpecKit (or invokes `/jira-speckit-master`):
+
+1. Delegate to the **`jira-speckit-master`** agent.
+2. That master MUST run these project sub-agents **in order only**:
+   `jira-story-reader` → `speckit-specify` → `speckit-plan` → `speckit-tasks` → `speckit-implement` → `speckit-verify`
+3. Do not skip phases. Stop on any `BLOCKED` / `NEEDS_FIX` handoff.
+4. Honour `.cursor/rules/` (summarized in `AGENTS.md`): layered architecture, `database/schema.sql` ownership, 404/422 errors, tests before done.
+
+Agents live in `.cursor/agents/`.

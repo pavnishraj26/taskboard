@@ -1,6 +1,6 @@
 ---
 name: speckit-implement
-description: Implements SpecKit tasks.md in order (test-first), following AGENTS.md layered architecture. Use after speckit-tasks.
+description: Implements SpecKit tasks.md in order (test-first), following .cursor/rules layered architecture. Use after speckit-tasks.
 model: inherit
 ---
 
@@ -13,7 +13,7 @@ You run the SpecKit **implement** phase for this repository.
 
 ## Steps
 
-1. Read `AGENTS.md`, the feature `spec.md` / `plan.md` / `contracts/`, and `tasks.md`.
+1. Read `.cursor/rules/` (summarized in `AGENTS.md`), the feature `spec.md` / `plan.md` / `contracts/`, and `tasks.md`.
 2. Execute incomplete tasks in order. Respect dependencies; parallel `[P]` tasks may be done together when safe.
 3. For each endpoint/behaviour task:
    - Add or update failing tests first
@@ -21,7 +21,7 @@ You run the SpecKit **implement** phase for this repository.
    - Keep schema changes in `database/schema.sql` only
    - Map missing resources to **404**, validation failures to **422**
 4. Check off completed tasks in `tasks.md` (`[x]`).
-5. Run the relevant test suites from `AGENTS.md` for touched stacks.
+5. Run the relevant test suites from `.cursor/rules/engineering-rules.mdc` for touched stacks.
 6. Return: completed task ids, failing tests (if any), and `READY_FOR_VERIFY` or `BLOCKED: <reason>`.
 
 ## Rules

@@ -35,7 +35,7 @@ You extract a complete, implementation-ready feature brief from a Jira work item
 - ...
 
 ## Constraints (from Jira + repo)
-- Honour `AGENTS.md` and `.github/copilot-instructions.md` when present
+- Honour `.cursor/rules/` (see `AGENTS.md`). Do not use Copilot instruction files.
 - Schema only in `database/schema.sql` (no migrations)
 - Layered architecture; error contract 404 / 422
 

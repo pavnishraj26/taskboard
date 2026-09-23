@@ -25,5 +25,6 @@ You run the SpecKit **tasks** phase for this repository.
 
 ## Rules
 
+- Follow `.cursor/rules/engineering-rules.mdc` and `.cursor/rules/tests.mdc`.
 - Tests use in-memory fakes/fixtures — never require a live database in unit/API tests.
 - Schema changes belong only in `database/schema.sql` (+ `seed.sql` when demos need data). No migration tooling files.

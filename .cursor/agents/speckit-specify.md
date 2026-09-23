@@ -13,7 +13,7 @@ You run the SpecKit **specify** phase for this repository.
 
 ## Steps
 
-1. Read `AGENTS.md`, existing `specs/*/spec.md` (especially the latest), and any `docs/feature-*.md` for tone and structure.
+1. Read `.cursor/rules/` (summarized in `AGENTS.md`), existing `specs/*/spec.md` (especially the latest), and any `docs/feature-*.md` for tone and structure.
 2. Choose the next feature folder: `specs/NNN-short-slug/` where `NNN` is zero-padded and increments from existing specs.
 3. Create `specs/NNN-short-slug/spec.md` matching the project template:
    - Feature branch name
@@ -29,5 +29,5 @@ You run the SpecKit **specify** phase for this repository.
 ## Rules
 
 - Specs describe behaviour and tests, not stack-specific implementation.
-- Honour layered architecture and 404/422 error contract as constraints the spec must respect.
+- Honour `.cursor/rules/engineering-rules.mdc` (layers, schema ownership, 404/422) as constraints the spec must respect.
 - Resolve open questions only when the brief already answers them; otherwise keep them listed.

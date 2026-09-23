@@ -12,7 +12,7 @@ You run the SpecKit **plan** phase for this repository.
 
 ## Steps
 
-1. Read the spec, `AGENTS.md`, `database/schema.sql`, and one backend + frontend slice to learn existing patterns.
+1. Read the spec, `.cursor/rules/` (summarized in `AGENTS.md`), `database/schema.sql`, and one backend + frontend slice to learn existing patterns.
 2. Write under the same `specs/NNN-slug/` folder:
    - `research.md` — decisions, alternatives considered, rationale (Phase 0)
    - `plan.md` — summary, technical context, constitution check gates, structure, implementation approach (mirror `specs/001-task-comments/plan.md`)
