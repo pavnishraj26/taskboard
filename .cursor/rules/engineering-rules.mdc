@@ -1,0 +1,48 @@
+---
+description: Repository engineering rules — layers, schema ownership, error contract, and tests
+alwaysApply: true
+---
+
+# Engineering rules
+
+Follow these on every change. They replace `.github/copilot-instructions.md`.
+
+## Layers
+
+HTTP goes Controller/Router → Service → Repository. Do not skip a layer.
+
+- Repository: all database access
+- Service: validation and business rules
+- Controller/Router: HTTP mapping only
+
+```python
+# Router maps domain errors. It does not query the database.
+except InvalidStatus as exc:
+    raise HTTPException(status_code=422, detail=str(exc)) from exc
+```
+
+Frontend: presentational components → page (state and fetching) → `services/` (all HTTP).
+
+## Schema
+
+`database/schema.sql` is the only schema source. Do not add EF migrations, Alembic, Flyway, `create_all()`, or `ddl-auto` other than `none`. The database sets `created_at` and `updated_at`; clients never send them.
+
+## Errors
+
+- `404` — missing task or comment id
+- `422` — missing title, unknown status, or blank/too-long comment author or body
+
+Do not add `400`, `403`, or `409` for these cases.
+
+## Contract
+
+Python, .NET, and Java share the same paths, status codes, and fields. The only allowed JSON difference is snake_case vs camelCase (`created_at` vs `createdAt`, `comment_count` vs `commentCount`).
+
+## Tests
+
+Add or update a test before an endpoint change is done. Cover the happy path, `404`, and `422`. Tests use in-memory fakes. They must not need a live database.
+
+- .NET: `cd backend-dotnet && dotnet test`
+- Python: `cd backend-python && pytest`
+- Java: `cd backend-java && ./mvnw -B test`
+- Frontend: `cd frontend && npm test -- --run`

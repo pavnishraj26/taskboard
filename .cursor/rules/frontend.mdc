@@ -1,0 +1,23 @@
+---
+description: Frontend layering — presentational components, page state, HTTP only in services
+globs: frontend/src/**/*.{js,jsx,css}
+alwaysApply: false
+---
+
+# Frontend
+
+- `components/` render props. They do not call the API.
+- `pages/` own state and data fetching (for example `BoardPage.jsx`).
+- All HTTP stays in `frontend/src/services/` (`api.js`, `taskService.js`). Components do not import axios.
+
+```javascript
+// taskService.js — the only place that calls the API
+export async function listTasks(status) {
+  const params = status && status !== 'all' ? { status } : {}
+  const { data } = await api.get('/api/tasks', { params })
+  return data
+}
+```
+
+- Styles stay in `frontend/src/index.css`. Do not add a CSS framework.
+- Accept both `commentCount` and `comment_count` from the API.

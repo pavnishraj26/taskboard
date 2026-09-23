@@ -1,0 +1,23 @@
+---
+description: Test-first endpoint changes using in-memory fakes, including 404 and 422
+globs: "**/*{test,Test,tests}*"
+alwaysApply: false
+---
+
+# Tests
+
+An endpoint change is not done until tests cover:
+
+- happy path
+- `404` for a missing id
+- `422` for a missing title, unknown status, or blank/too-long comment author or body
+
+Use the existing in-memory fakes (`FakeTaskRepository`, `WebApplicationFactory`, MockMvc, Vitest mocks). Do not open a real PostgreSQL connection from a test.
+
+```python
+# 422 is asserted in the API test before the route is considered done
+response = await client.post("/api/tasks", json={"title": "  "})
+assert response.status_code == 422
+```
+
+Run the suite for the stack you touched (`pytest`, `dotnet test`, `./mvnw -B test`, or `npm test -- --run`).
