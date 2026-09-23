@@ -1,8 +1,8 @@
 # Engineering Task Board
 
 A small, deliberately simple full-stack application used to demonstrate
-disciplined, AI-assisted engineering: GitHub Copilot enterprise customization
-and spec-driven development (SDD).
+disciplined, AI-assisted engineering: Cursor project rules and agents, and
+spec-driven development (SDD).
 
 The domain is a Kanban-style task board. Every piece of work is a **task** that
 moves through three columns — **To Do → In Progress → Done** — with full CRUD
@@ -34,9 +34,9 @@ HTTP  ─▶  Controller / Router   (translate HTTP <-> domain, map errors to co
 The React app layers the same way: `components/` (presentational) → `pages/`
 (state + data fetching) → `services/` (all HTTP in one place).
 
-The engineering rules that keep these layers honest are in
-[`.github/copilot-instructions.md`](.github/copilot-instructions.md) and
-[`AGENTS.md`](AGENTS.md).
+The engineering rules that keep these layers honest are the Cursor rules in
+[`.cursor/rules/`](.cursor/rules/), summarized in [`AGENTS.md`](AGENTS.md).
+They replace a Copilot `copilot-instructions.md` file.
 
 ## Repository layout
 
@@ -46,8 +46,9 @@ backend-java/       Spring Boot backend   (Maven wrapper included)
 backend-python/     FastAPI backend       (requirements.txt, pytest.ini)
 frontend/           React + Vite single-page board
 database/           schema.sql (source of truth), seed.sql, migrations/
-.github/            Copilot customization: instructions, prompts, agents, skills
-usecase.md          Domain, data model, and full API contract
+.cursor/            Cursor customization: rules, agents, and the SpecKit workflow
+specs/              SpecKit feature folders (spec, plan, tasks)
+docs/               Domain write-up and feature briefs
 AGENTS.md           Quick engineering rules for AI agents
 ```
 
@@ -284,15 +285,39 @@ Expected state:
 - [ ] `schema.sql` + `seed.sql` load into a clean database without error
 - [ ] The board renders the seeded tasks and CRUD works against a live backend
 
-## Copilot & agent customization
+## Cursor & agent customization
 
-`.github/` holds the GitHub Copilot enterprise customization this repo is built
-to demonstrate:
+`.cursor/` holds the Cursor project customization, in the same roles a Copilot
+`.github/` tree would occupy: repository-wide instructions, path-scoped rules,
+and custom agents.
 
 | Path | Purpose |
 |------|---------|
-| `copilot-instructions.md` | Repository-wide engineering rules |
-| `instructions/*.instructions.md` | Path-scoped rules (frontend, tests) |
-| `prompts/*.prompt.md` | Reusable prompts (`new-endpoint`, `impact-analysis`) |
-| `agents/*.agent.md` | Custom chat agents (e.g. `code-reviewer`) |
-| `skills/*/SKILL.md` | Agent skills (e.g. `test-coverage-report`) |
+| `rules/engineering-rules.mdc` | Repository-wide engineering rules (always applied): layers, `database/schema.sql` ownership, 404/422, shared API, tests |
+| `rules/frontend.mdc` | Path-scoped rules for `frontend/src/**` (presentational components, page state, HTTP only in `services/`) |
+| `rules/tests.mdc` | Path-scoped test rules: happy path, 404, 422, in-memory fakes |
+| `rules/jira-speckit-workflow.mdc` | When a Jira story is requested, delegate to the SpecKit master agent |
+| `agents/jira-speckit-master.md` | Orchestrates the pipeline; does not implement the feature itself |
+| `agents/jira-story-reader.md` | Reads a Jira issue into a feature brief |
+| `agents/speckit-specify.md` | Writes `specs/NNN-slug/spec.md` |
+| `agents/speckit-plan.md` | Writes the plan, research, data model, contracts, and quickstart |
+| `agents/speckit-tasks.md` | Writes `tasks.md` |
+| `agents/speckit-implement.md` | Implements tasks test-first |
+| `agents/speckit-verify.md` | Checks acceptance scenarios and the engineering rules |
+| `agents/README.md` | How to invoke the pipeline |
+| [`AGENTS.md`](AGENTS.md) | Short index of the rules and test commands |
+
+Invoke the pipeline from chat:
+
+```text
+/jira-speckit-master PROJ-123
+```
+
+The master runs one phase at a time:
+`jira-story-reader` → `speckit-specify` → `speckit-plan` → `speckit-tasks` →
+`speckit-implement` → `speckit-verify`. It continues only on `READY_FOR_*` or
+`DONE`, and stops on `BLOCKED` or `NEEDS_FIX`.
+
+Atlassian must be connected under **Settings → Tools & MCP** before the story
+reader can load a Jira issue. The project MCP entry (`.cursor/mcp.json`) is
+local and is not committed.
